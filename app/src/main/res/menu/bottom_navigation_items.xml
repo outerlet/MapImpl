@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item_polyline"
+          android:title="@string/text_polyline"/>
+    <item android:id="@+id/item_polygon"
+          android:title="@string/text_polygon"/>
+    <item android:id="@+id/item_overlay"
+          android:title="@string/text_ground_overlay"/>
+</menu>

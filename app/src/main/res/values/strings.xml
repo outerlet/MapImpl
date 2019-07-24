@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">マップ確認</string>
+    <string name="title_activity_maps">GoogleMapで色々やる</string>
+    <string name="marker_title_osaka_station">大阪駅</string>
+    <string name="marker_snippet_osaka_station">シンボルフラワーはバラ</string>
+    <string name="marker_title_fukushima_station">福島駅</string>
+    <string name="marker_snippet_fukushima_station">シンボルフラワーはカキツバタ</string>
+    <string name="marker_title_umeda_shinmichi">梅田新道</string>
+    <string name="marker_snippet_umeda_shinmichi">だいたい梅田新道交差点のことを指す</string>
+    <string name="message_has_not_enough_permission">位置情報を利用できません</string>
+    <string name="text_marker">Marker</string>
+    <string name="text_circle">Circle</string>
+    <string name="text_polyline">Polyline</string>
+    <string name="text_polygon">Polygon</string>
+    <string name="text_ground_overlay">Overlay</string>
+</resources>
