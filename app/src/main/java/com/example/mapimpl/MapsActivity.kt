@@ -3,9 +3,7 @@ package com.example.mapimpl
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -32,6 +30,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val osakaStation = LatLng(34.702362, 135.495865)
     private val umedaShinmichi = LatLng(34.698247, 135.500521)
     private val fukushimaStation = LatLng(34.697246, 135.486794)
+    private val skyBuilding = LatLng(34.705281, 135.490114)
 
     private val cameraTarget = LatLngBounds(LatLng(34.692544, 135.486230), LatLng(34.713960, 135.511829))
 
@@ -84,17 +83,41 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 mMapObject = when (item.itemId) {
-                    R.id.item_polyline -> addPolyline()
-                    R.id.item_polygon -> addPolygon()
-                    else -> addGroundOverlay()
+                    R.id.item_polyline -> addPolyline(points)
+                    R.id.item_polygon -> addPolygon(points)
+                    else -> addGroundOverlay(overlayBounds)
                 }
 
                 true
             }
 
-            addMarkers()
-            addCircle()
-            mMapObject = addPolyline()
+            addMarkers(listOf(
+                Triple(R.string.marker_title_osaka_station, R.string.marker_snippet_osaka_station, osakaStation),
+                Triple(R.string.marker_title_fukushima_station, R.string.marker_snippet_fukushima_station, fukushimaStation),
+                Triple(R.string.marker_title_umeda_shinmichi, R.string.marker_snippet_umeda_shinmichi, umedaShinmichi)
+            ).map { e ->
+                MarkerAttribute(getString(e.first), getString(e.second), e.third)
+            })
+
+            addCircle(skyBuilding)
+
+            mMapObject = addPolyline(points)
+
+            setOnCircleClickListener { circle ->
+                Toast.makeText(this@MapsActivity, "CIRCLE : ${circle.tag as String}", Toast.LENGTH_SHORT).show()
+            }
+
+            setOnPolylineClickListener { polyline ->
+                Toast.makeText(this@MapsActivity, "POLYLINE : ${polyline.tag as String}", Toast.LENGTH_SHORT).show()
+            }
+
+            setOnPolygonClickListener { polygon ->
+                Toast.makeText(this@MapsActivity, "POLYGON : ${polygon.tag as String}", Toast.LENGTH_SHORT).show()
+            }
+
+            setOnGroundOverlayClickListener { overlay ->
+                Toast.makeText(this@MapsActivity, "GROUND-OVERLAY : ${overlay.tag as String}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -108,67 +131,5 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 Toast.makeText(this, R.string.message_has_not_enough_permission, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun GoogleMap.addMarkers(): List<Marker> {
-        return mutableListOf<Marker>().apply {
-            listOf(
-                Triple(R.string.marker_title_osaka_station, R.string.marker_snippet_osaka_station, osakaStation),
-                Triple(R.string.marker_title_fukushima_station, R.string.marker_snippet_fukushima_station, fukushimaStation),
-                Triple(R.string.marker_title_umeda_shinmichi, R.string.marker_snippet_umeda_shinmichi, umedaShinmichi)
-            ).forEach { point ->
-                addMarker(
-                    MarkerOptions()
-                        .position(point.third)
-                        .title(getString(point.first))
-                        .snippet(getString(point.second))
-                        .zIndex(1.0f)
-                )
-            }
-        }
-    }
-
-    private fun GoogleMap.addPolyline(): Polyline {
-        return addPolyline(
-            PolylineOptions()
-                .addAll(points)
-                .color(Color.BLUE)
-                .width(5.0f)
-                .zIndex(2.0f)
-        )
-    }
-
-    private fun GoogleMap.addPolygon(): Polygon {
-        return addPolygon(
-            PolygonOptions()
-                .addAll(points)
-                .fillColor(Color.YELLOW)
-                .strokeColor(Color.BLACK)
-                .strokeWidth(5.0f)
-                .zIndex(3.0f)
-        )
-    }
-
-    private fun GoogleMap.addCircle(): Circle {
-        return addCircle(
-            CircleOptions()
-                .center(defaultPosition)
-                .radius(100.0)
-                .fillColor(Color.GREEN)
-                .strokeColor(Color.BLACK)
-                .strokeWidth(5.0f)
-                .zIndex(4.0f)
-        )
-    }
-
-    private fun GoogleMap.addGroundOverlay(): GroundOverlay {
-        return addGroundOverlay(
-            GroundOverlayOptions()
-//                .position(defaultPosition, 1000.0f)
-                .positionFromBounds(overlayBounds)
-                .anchor(0.5f, 0.5f)
-                .image(BitmapDescriptorFactory.fromResource(R.drawable.ground_overlay))
-                .zIndex(5.0f)
-        )
     }
 }
